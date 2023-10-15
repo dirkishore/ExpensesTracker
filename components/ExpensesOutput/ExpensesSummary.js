@@ -3,14 +3,14 @@ import { StyleSheet, Text, View } from "react-native";
 import colors from "../../constants/colors";
 
 function ExpensesSummary({ expenses, periods }) {
-  // const expensesSum = expenses.reduce((sum, expense) => {
-  //   return sum + expense.amount;
-  // }, 0);
+  const expensesSum = expenses.reduce((sum, expense) => {
+    return sum + expense.amount;
+  }, 0);
 
-  let expensesSum = 0;
-  for (let i = 0; i < expenses.length; i++) {
-    expensesSum += expenses[i].amount;
-  }
+  // let expensesSum = 0;
+  // for (let i = 0; i < expenses.length; i++) {
+  //   expensesSum += expenses[i].amount;
+  // }
 
   return (
     <View style={styles.container}>

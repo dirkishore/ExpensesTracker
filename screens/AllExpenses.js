@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ExpensesOutput from "../components/ExpensesOutput/ExpensesOutput";
 import colors from "../constants/colors";
+import { ExpensesContext } from "../store/ExpensesContext";
 
 export default function AllExpenses() {
+  const expensesCtx = useContext(ExpensesContext);
   return (
     <View style={styles.container}>
-      <ExpensesOutput expensesPeriod={"All Expenses"} />
+      <ExpensesOutput
+        expenses={expensesCtx.expenses}
+        expensesPeriod={"All Expenses"}
+        fallBackText={"No Expenses"}
+      />
     </View>
   );
 }

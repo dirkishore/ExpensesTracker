@@ -11,6 +11,7 @@ import AllExpenses from "./screens/AllExpenses";
 import ManageExpense from "./screens/ManageExpense";
 import colors from "./constants/colors";
 import IconButton from "./UI/IconButton";
+import ExpenseContextProvider from "./store/ExpensesContext";
 
 const BottomTap = createBottomTabNavigator();
 const materialBottomTap = createMaterialBottomTabNavigator();
@@ -73,25 +74,27 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerStyle: { backgroundColor: colors.primary },
-            headerTintColor: colors.white,
-          }}
-        >
-          <Stack.Screen
-            name="ExpensesOverview"
-            component={BottomTapNavigator}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="ManageExpense"
-            component={ManageExpense}
-            options={{ presentation: "modal" }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <ExpenseContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: { backgroundColor: colors.primary },
+              headerTintColor: colors.white,
+            }}
+          >
+            <Stack.Screen
+              name="ExpensesOverview"
+              component={BottomTapNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ManageExpense"
+              component={ManageExpense}
+              options={{ presentation: "modal" }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ExpenseContextProvider>
     </>
   );
 }
