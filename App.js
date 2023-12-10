@@ -21,9 +21,26 @@ const BottomTapNavigator = () => {
   return (
     <BottomTap.Navigator
       screenOptions={({ navigation }) => ({
-        headerStyle: { backgroundColor: colors.primary },
+        headerStyle: {
+          backgroundColor: colors.primary,
+          elevation: 10,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.6,
+          shadowRadius: 5,
+        },
         headerTintColor: colors.white,
-        tabBarStyle: { backgroundColor: colors.primary },
+        tabBarStyle: {
+          backgroundColor: colors.primary,
+          borderTopColor: colors.primary,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.6,
+          elevation: 10,
+        },
         tabBarLabelStyle: { paddingBottom: 6, fontSize: 11 },
         tabBarActiveTintColor: colors.white,
         tabBarInactiveTintColor: "black",
@@ -44,6 +61,7 @@ const BottomTapNavigator = () => {
         component={RecentExpenses}
         options={{
           title: "Recent",
+
           tabBarIcon: (tabInfo, size) => (
             <Ionicons
               name="hourglass"

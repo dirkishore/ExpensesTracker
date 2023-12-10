@@ -22,18 +22,18 @@ export default function Button({ children, onPress, mode, style }) {
 const styles = StyleSheet.create({
   button: {
     borderRadius: 4,
-    backgroundColor: colors.secondary,
+    backgroundColor: colors.white,
     padding: 8,
     paddingHorizontal: 20,
   },
   buttonText: {
-    color: "#fff",
+    color: "#000",
   },
   flat: {
     backgroundColor: "transparent",
   },
   flatText: {
-    color: colors.white,
+    color: "#fff",
     fontWeight: "bold",
   },
   pressed: {

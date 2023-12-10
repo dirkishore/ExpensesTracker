@@ -7,7 +7,7 @@ import { Text } from "react-native";
 function ExpensesOutput({ expenses, expensesPeriod, fallBackText }) {
   let content = <Text style={styles.msg}>{fallBackText}</Text>;
 
-  if (expenses.length >= 0) {
+  if (expenses?.length > 0) {
     content = <ExpensesList expenses={expenses} />;
   }
   return (

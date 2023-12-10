@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import colors from "../../constants/colors";
 
 function ExpensesSummary({ expenses, periods }) {
-  const expensesSum = expenses.reduce((sum, expense) => {
+  const expensesSum = expenses?.reduce((sum, expense) => {
     return sum + expense.amount;
   }, 0);
 
@@ -15,7 +15,7 @@ function ExpensesSummary({ expenses, periods }) {
   return (
     <View style={styles.container}>
       <Text style={styles.periods}>{periods}</Text>
-      <Text style={styles.total}>Rs.{expensesSum.toFixed(2)}</Text>
+      <Text style={styles.total}>Rs.{expensesSum?.toFixed(2)}</Text>
     </View>
   );
 }
@@ -23,6 +23,7 @@ function ExpensesSummary({ expenses, periods }) {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 15,
+    marginTop: 10,
     padding: 20,
     backgroundColor: colors.gray,
     borderRadius: 15,

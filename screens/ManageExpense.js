@@ -1,13 +1,17 @@
-import React, { useContext, useLayoutEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-
-import Button from "../UI/Button";
+import React, { useContext, useLayoutEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import colors from "../constants/colors";
 import IconButton from "../UI/IconButton";
 import { ExpensesContext } from "../store/ExpensesContext";
+import Expenseform from "../components/ManageExpense/Expenseform";
+import { deleteExpense, storeExpense, updateExpense } from "../util/http";
+import LoadingOverlay from "../UI/LoadingOverlay";
+import ErrorOverlay from "../UI/ErrorOverlay";
 
 export default function ManageExpense({ route, navigation }) {
   const expenseCtx = useContext(ExpensesContext);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState();
 
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
@@ -18,43 +22,61 @@ export default function ManageExpense({ route, navigation }) {
     });
   }, [navigation, isEditing]);
 
-  function deleteExpenseHandler() {
-    expenseCtx.deleteExpense(editedExpenseId);
-    navigation.goBack();
+  const selectedExpense = expenseCtx.expenses?.find(
+    (expense) => expense.id === editedExpenseId
+  );
+
+  async function deleteExpenseHandler() {
+    setIsSubmitting(true);
+    try {
+      await deleteExpense(editedExpenseId);
+      expenseCtx.deleteExpense(editedExpenseId);
+      navigation.goBack();
+    } catch (error) {
+      setErrorMessage("Could not delete expense!");
+      setIsSubmitting(false);
+    }
   }
 
   let cancelHandler = () => {
     navigation.goBack();
   };
 
-  let confirmHandler = () => {
-    if (isEditing) {
-      expenseCtx.updateExpense(editedExpenseId, {
-        description: "update",
-        date: new Date(),
-        amount: 100,
-      });
-    } else {
-      expenseCtx.addExpense({
-        description: "test",
-        date: new Date(),
-        amount: 100,
-      });
+  let confirmHandler = async (expenseData) => {
+    setIsSubmitting(true);
+    try {
+      if (isEditing) {
+        await updateExpense(expenseData, editedExpenseId);
+        expenseCtx.updateExpense(editedExpenseId, expenseData);
+      } else {
+        const id = await storeExpense(expenseData);
+        expenseCtx.addExpense({ ...expenseData, id: id });
+      }
+      navigation.goBack();
+    } catch (error) {
+      setErrorMessage("Could not save expense - Please try again later!");
+      setIsSubmitting(false);
     }
-    navigation.goBack();
   };
+
+  if (isSubmitting) {
+    return <LoadingOverlay />;
+  }
+
+  if (errorMessage?.length > 0 && !isSubmitting) {
+    return <ErrorOverlay ErrorMessage={errorMessage} />;
+  }
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <Button mode={"flat"} onPress={cancelHandler} style={styles.button}>
-          Cancel
-        </Button>
-        <Button style={styles.button} onPress={confirmHandler}>
-          {isEditing ? "Update" : "Add"}
-        </Button>
+      <View>
+        <Expenseform
+          defaultValues={selectedExpense}
+          submitButtonLabel={isEditing === true ? "Update" : "Add"}
+          onCancel={cancelHandler}
+          onSubmit={confirmHandler}
+        />
       </View>
-
       {isEditing && (
         <View style={styles.trashContainer}>
           <IconButton
@@ -72,23 +94,15 @@ export default function ManageExpense({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.primary,
-    padding: 18,
+    backgroundColor: "#190482",
+    paddingHorizontal: 8,
   },
   trashContainer: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
-    borderTopColor: colors.white,
+    borderTopColor: colors.primary,
     borderTopWidth: 0.5,
     marginTop: 12,
-  },
-  buttonContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  button: {
-    marginHorizontal: 10,
   },
 });
